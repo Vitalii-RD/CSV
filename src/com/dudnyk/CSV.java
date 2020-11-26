@@ -12,9 +12,18 @@ import java.util.*;
 public class CSV {
 
   private String csvSplitBy = ",";
+  private String filePath;
+
+  public CSV(String filePath) {
+    this.filePath = filePath;
+  }
 
   public void setCvsSplitBy(String cvsSplitBy) {
     this.csvSplitBy = cvsSplitBy;
+  }
+
+  public List<Employee> getEmployees() {
+    return getEmployees(this.filePath);
   }
 
   public List<Employee> getEmployees(String filePath) {
@@ -42,8 +51,11 @@ public class CSV {
     return  new Employee(data[0], Float.parseFloat(data[2]), date);
   }
 
-    public void generateCSVFile(String fileName, List<Employee> data) {
-    try (FileWriter csvWriter = new FileWriter(fileName + ".csv")) {
+    public void generateCSVFile(String fileName/*, List<Employee> data*/) {
+      List<Employee> data = this.getEmployees();
+      Collections.sort(data, Comparator.comparing(Employee::getDate));
+
+      try (FileWriter csvWriter = new FileWriter(fileName + ".csv")) {
 
       List<Date> dates = data.stream()
               .map((e) -> e.getDate())
